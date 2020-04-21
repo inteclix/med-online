@@ -28,11 +28,11 @@ module.exports = function (app) {
     app.set('sequelizeSync', sequelize.sync({ force: true }).then(() => {
       app.service("users").create({
         username: "admin",
-        password: "0123456789"
+        password: "0123456789",
+        permissions: "admin"
       })
       app.service("medicaments").create({
-        name: "Doliprane",
-        description: "medicament !"
+        CODE: "Doliprane",
       })
     }))
 

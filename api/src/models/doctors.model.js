@@ -19,7 +19,7 @@ module.exports = function (app) {
   doctors.associate = function (models) {
     doctors.belongsTo(models.users)
     doctors.belongsTo(models.clinics)
-    doctors.hasOne(models.specialities)
+    doctors.belongsTo(models.specialities)
   };
 
   return doctors;

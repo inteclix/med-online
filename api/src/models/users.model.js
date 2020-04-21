@@ -15,6 +15,9 @@ module.exports = function (app) {
       type: DataTypes.STRING,
       allowNull: false
     },
+    permissions: {
+      type: DataTypes.STRING
+    },
     email: {
       type: DataTypes.STRING,
       unique: true

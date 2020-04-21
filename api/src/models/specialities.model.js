@@ -23,7 +23,7 @@ module.exports = function (app) {
 
   // eslint-disable-next-line no-unused-vars
   specialities.associate = function (models) {
-    specialities.belongsTo(models.doctors)
+    specialities.hasMany(models.doctors)
   };
 
   return specialities;

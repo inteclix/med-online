@@ -6,9 +6,24 @@ const DataTypes = Sequelize.DataTypes;
 module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient');
   const clinics = sequelizeClient.define('clinics', {
-    text: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    description:{
+      type: DataTypes.STRING
+    },
+    address: {
+      type: DataTypes.STRING,
+    },
+    lat: {
+      type: DataTypes.FLOAT
+    },
+    lon: {
+      type: DataTypes.FLOAT
+    },
+    logo: {
+      type: DataTypes.STRING
     }
   }, {
     hooks: {
