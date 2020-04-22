@@ -20,21 +20,13 @@ import {
   MenuItem,
   LinearProgress
 } from '@material-ui/core';
+import { SingleSelect } from "react-select-material-ui";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import AppContext from "../../contexts/app-context"
 
 const schema = {
   specialityId: {
     presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 32
-    }
-  },
-  lastName: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 32,
-    }
   },
   mobile: {
     presence: { allowEmpty: false, message: 'is required' },
@@ -174,7 +166,7 @@ const SignUp = props => {
 
   const [formState, setFormState] = useState({
     isValid: false,
-    values: {},
+    values: {is: "doctor"},
     touched: {},
     errors: {}
   });
@@ -193,7 +185,9 @@ const SignUp = props => {
     api.service("specialities").find()
       .then(({ data }) => {
         if (mounted) {
-          setSpecialities(data)
+          const spes = data.map((s) => { return { label: s.name, value: s.id } })
+          console.log(spes)
+          setSpecialities(spes)
         }
       })
       .catch(() => {
@@ -203,7 +197,6 @@ const SignUp = props => {
   }, [])
   const handleChange = event => {
     event.persist();
-
     setFormState(formState => ({
       ...formState,
       values: {
@@ -223,7 +216,7 @@ const SignUp = props => {
   const handleBack = () => {
     history.goBack();
   };
-
+  console.log(formState)
   const handleSignUp = event => {
     event.preventDefault();
     api.service("users").create({ ...formState.values })
@@ -303,40 +296,25 @@ const SignUp = props => {
                 >
                   {t('Use your username to create new account')}
                 </Typography>
-                <FormControl
-                  fullWidth
-                  variant="outlined"
-                  error={hasError('specialityId')}
-                  helperText={
-                    hasError('specialityId') ? formState.errors.specialityId[0] : null
-                  }
-                  className={classes.textField}
-                >
-                  <InputLabel>{t('Speciality')}</InputLabel>
-                  <Select
-                    name="specialityId"
-                    value={formState.values.specialityId || ''}
-                    onChange={handleChange}
-                  >
-                    {specialities.map((spe, index) => (
-                      <MenuItem key={index} value={spe.id}>{spe.name}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <TextField
-                  className={classes.textField}
-                  error={hasError('lastName')}
-                  fullWidth
-                  helperText={
-                    hasError('lastName') ? formState.errors.lastName[0] : null
-                  }
-                  label={t("Last name")}
-                  name="lastName"
-                  onChange={handleChange}
-                  type="text"
-                  value={formState.values.lastName || ''}
-                  variant="outlined"
+                <SingleSelect
+                  value={formState.values.specialityId || ''}
+                  placeholder={t("Select your speciality")}
+                  options={specialities}
+                  onChange={(value) => {
+                    setFormState(formState => ({
+                      ...formState,
+                      values: {
+                        ...formState.values,
+                        ['specialityId']:value
+                      },
+                      touched: {
+                        ...formState.touched,
+                        ["specialityId"]: true
+                      }
+                    }));
+                  }}
                 />
+
                 <TextField
                   className={classes.textField}
                   error={hasError('mobile')}
@@ -349,7 +327,6 @@ const SignUp = props => {
                   onChange={handleChange}
                   type="text"
                   value={formState.values.mobile || ''}
-                  variant="outlined"
                 />
                 <TextField
                   className={classes.textField}
@@ -363,7 +340,6 @@ const SignUp = props => {
                   onChange={handleChange}
                   type="text"
                   value={formState.values.username || ''}
-                  variant="outlined"
                 />
                 <TextField
                   className={classes.textField}
@@ -377,7 +353,6 @@ const SignUp = props => {
                   onChange={handleChange}
                   type="password"
                   value={formState.values.password || ''}
-                  variant="outlined"
                 />
                 <div className={classes.policy}>
                   <Checkbox
