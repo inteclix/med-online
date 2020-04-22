@@ -24,8 +24,8 @@ import validators from './common/validators';
 import Routes from './Routes';
 import AppContext from "./contexts/app-context"
 
-
-const restClient = rest("https://3030.medda-dz.com");
+const HOST_API = "https://3030-f0343add-2bae-4d2f-90c1-3613039470ac.ws-eu01.gitpod.io"
+const restClient = rest(HOST_API);
 const api = feathers();
 api.configure(restClient.fetch(window.fetch));
 api.configure(auth({

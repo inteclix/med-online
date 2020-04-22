@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
+
 import {
   Grid,
   Button,
@@ -12,13 +13,18 @@ import {
   Link,
   FormHelperText,
   Checkbox,
-  Typography
+  Typography,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  LinearProgress
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import AppContext from "../../contexts/app-context"
 
 const schema = {
-  firstName: {
+  specialityId: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
       maximum: 32
@@ -34,7 +40,7 @@ const schema = {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
       maximum: 10,
-      minimum:10
+      minimum: 10
     }
   },
   username: {
@@ -145,12 +151,20 @@ const useStyles = makeStyles(theme => ({
   },
   signUpButton: {
     margin: theme.spacing(2, 0)
-  }
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
 }));
 
 const SignUp = props => {
   const { history } = props;
   const { api } = useContext(AppContext)
+  const [specialities, setSpecialities] = useState([])
   const classes = useStyles();
   const { t, i18n } = useTranslation();
 
@@ -174,7 +188,19 @@ const SignUp = props => {
       errors: errors || {}
     }));
   }, [formState.values]);
+  useEffect(() => {
+    let mounted = true
+    api.service("specialities").find()
+      .then(({ data }) => {
+        if (mounted) {
+          setSpecialities(data)
+        }
+      })
+      .catch(() => {
 
+      })
+    return () => { mounted = false }
+  }, [])
   const handleChange = event => {
     event.persist();
 
@@ -277,20 +303,26 @@ const SignUp = props => {
                 >
                   {t('Use your username to create new account')}
                 </Typography>
-                <TextField
-                  className={classes.textField}
-                  error={hasError('firstName')}
+                <FormControl
                   fullWidth
-                  helperText={
-                    hasError('firstName') ? formState.errors.firstName[0] : null
-                  }
-                  label={t("First name")}
-                  name="firstName"
-                  onChange={handleChange}
-                  type="text"
-                  value={formState.values.firstName || ''}
                   variant="outlined"
-                />
+                  error={hasError('specialityId')}
+                  helperText={
+                    hasError('specialityId') ? formState.errors.specialityId[0] : null
+                  }
+                  className={classes.textField}
+                >
+                  <InputLabel>{t('Speciality')}</InputLabel>
+                  <Select
+                    name="specialityId"
+                    value={formState.values.specialityId || ''}
+                    onChange={handleChange}
+                  >
+                    {specialities.map((spe, index) => (
+                      <MenuItem key={index} value={spe.id}>{spe.name}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
                 <TextField
                   className={classes.textField}
                   error={hasError('lastName')}
