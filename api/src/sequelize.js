@@ -28,6 +28,8 @@ module.exports = function (app) {
     app.set('sequelizeSync', sequelize.sync({ force: true }).then(() => {
       app.service("users").create({
         username: "admin",
+        firstname: "seddik",
+        lastname: "benzemame",
         password: "0123456789",
         permissions: "admin"
       })

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Avatar, Typography } from '@material-ui/core';
+import { Avatar, Typography, CircularProgress } from '@material-ui/core';
+
+import AppContext from "../../../../../../contexts/app-context";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,16 +23,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Profile = props => {
+const Profile = (props) => {
   const { className, ...rest } = props;
-
   const classes = useStyles();
-
-  const user = {
-    name: 'Shen Zhi',
-    avatar: '/images/avatars/avatar_11.png',
-    bio: 'Brain Director'
-  };
+  const { user } = useContext(AppContext)
 
   return (
     <div
@@ -38,19 +34,19 @@ const Profile = props => {
       className={clsx(classes.root, className)}
     >
       <Avatar
-        alt="Person"
+        alt="seddik"
         className={classes.avatar}
         component={RouterLink}
-        src={user.avatar}
+        src={"/image/"}
         to="/settings"
       />
       <Typography
         className={classes.name}
         variant="h4"
       >
-        {user.name}
+        {user.firstname + " " + user.firstname}
       </Typography>
-      <Typography variant="body2">{user.bio}</Typography>
+      <Typography variant="body2">{"bio"}</Typography>
     </div>
   );
 };
@@ -59,4 +55,4 @@ Profile.propTypes = {
   className: PropTypes.string
 };
 
-export default Profile;
+export default Profile

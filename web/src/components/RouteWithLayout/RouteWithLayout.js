@@ -1,21 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 import { scrollToTop } from "../../common";
 const RouteWithLayout = props => {
   const { layout: Layout, component: Component, ...rest } = props;
-  useEffect(()=>{
+  useEffect(() => {
     scrollToTop()
   })
+  const Loader = () => (
+    <Layout>
+      <LinearProgress />
+    </Layout>
+  )
   return (
-    <Route
-      {...rest}
-      render={matchProps => (
-        <Layout>
-          <Component {...matchProps} />
-        </Layout>
-      )}
-    />
+    <Suspense fallback={<Loader />}>
+      <Route
+        {...rest}
+        render={matchProps => (
+          <Layout>
+            <Component {...matchProps} />
+          </Layout>
+        )}
+      />
+    </Suspense>
   );
 };
 
@@ -25,4 +34,4 @@ RouteWithLayout.propTypes = {
   path: PropTypes.string
 };
 
-export default RouteWithLayout;
+export default RouteWithLayout

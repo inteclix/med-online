@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -26,14 +27,14 @@ const schema = {
   lastName: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
-      maximum: 10,
-      minimum:10
+      maximum: 32,
     }
   },
   mobile: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
-      maximum: 32
+      maximum: 10,
+      minimum:10
     }
   },
   username: {
@@ -151,6 +152,11 @@ const SignUp = props => {
   const { history } = props;
   const { api } = useContext(AppContext)
   const classes = useStyles();
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = lng => {
+    i18n.changeLanguage(lng);
+  };
 
   const [formState, setFormState] = useState({
     isValid: false,
@@ -223,21 +229,20 @@ const SignUp = props => {
                 className={classes.quoteText}
                 variant="h1"
               >
-                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                they sold out High Life.
+                {t('Welcome to Med ONLINE')}
               </Typography>
               <div className={classes.person}>
                 <Typography
                   className={classes.name}
                   variant="body1"
                 >
-                  Takamaru Ayako
+                  {t('Platform and tools for your medicale work')}
                 </Typography>
                 <Typography
                   className={classes.bio}
                   variant="body2"
                 >
-                  Manager at inVision
+                  {t('@inteclix')}
                 </Typography>
               </div>
             </div>
@@ -264,13 +269,13 @@ const SignUp = props => {
                   className={classes.title}
                   variant="h2"
                 >
-                  Create new account
+                  {t('Create new account')}
                 </Typography>
                 <Typography
                   color="textSecondary"
                   gutterBottom
                 >
-                  Use your username to create new account
+                  {t('Use your username to create new account')}
                 </Typography>
                 <TextField
                   className={classes.textField}
@@ -279,7 +284,7 @@ const SignUp = props => {
                   helperText={
                     hasError('firstName') ? formState.errors.firstName[0] : null
                   }
-                  label="First name"
+                  label={t("First name")}
                   name="firstName"
                   onChange={handleChange}
                   type="text"
@@ -293,7 +298,7 @@ const SignUp = props => {
                   helperText={
                     hasError('lastName') ? formState.errors.lastName[0] : null
                   }
-                  label="Last name"
+                  label={t("Last name")}
                   name="lastName"
                   onChange={handleChange}
                   type="text"
@@ -305,13 +310,13 @@ const SignUp = props => {
                   error={hasError('mobile')}
                   fullWidth
                   helperText={
-                    hasError('mobile') ? formState.errors.lastName[0] : null
+                    hasError('mobile') ? formState.errors.mobile[0] : null
                   }
-                  label="Mobile"
+                  label={t("Mobile")}
                   name="mobile"
                   onChange={handleChange}
                   type="text"
-                  value={formState.values.lastName || ''}
+                  value={formState.values.mobile || ''}
                   variant="outlined"
                 />
                 <TextField
@@ -321,7 +326,7 @@ const SignUp = props => {
                   helperText={
                     hasError('username') ? formState.errors.username[0] : null
                   }
-                  label="Username"
+                  label={t("Username")}
                   name="username"
                   onChange={handleChange}
                   type="text"
@@ -335,7 +340,7 @@ const SignUp = props => {
                   helperText={
                     hasError('password') ? formState.errors.password[0] : null
                   }
-                  label="Password"
+                  label={t("Password")}
                   name="password"
                   onChange={handleChange}
                   type="password"
@@ -355,7 +360,7 @@ const SignUp = props => {
                     color="textSecondary"
                     variant="body1"
                   >
-                    I have read the{' '}
+                    {t('I have read the') + ' '}
                     <Link
                       color="primary"
                       component={RouterLink}
@@ -363,7 +368,7 @@ const SignUp = props => {
                       underline="always"
                       variant="h6"
                     >
-                      Terms and Conditions
+                      {t('Terms and Conditions')}
                     </Link>
                   </Typography>
                 </div>
@@ -381,19 +386,19 @@ const SignUp = props => {
                   type="submit"
                   variant="contained"
                 >
-                  Sign up now
+                  {t('Sign up now')}
                 </Button>
                 <Typography
                   color="textSecondary"
                   variant="body1"
                 >
-                  Have an account?{' '}
+                  {t('Have an account?') + ' '}
                   <Link
                     component={RouterLink}
                     to="/sign-in"
                     variant="h6"
                   >
-                    Sign in
+                    {t('Sign in')}
                   </Link>
                 </Typography>
               </form>

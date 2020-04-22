@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 
 const Topbar = props => {
   const { className, onSidebarOpen, ...rest } = props;
-  const { api } = useContext(AppContext)
+  const { api, setUser } = useContext(AppContext)
   const classes = useStyles();
 
   const [notifications] = useState([]);
@@ -37,7 +37,7 @@ const Topbar = props => {
         <RouterLink to="/">
           <img
             alt="Logo"
-            src="/images/logos/logo--white.svg"
+            src="/images/logos/med-online.png"
           />
         </RouterLink>
         <div className={classes.flexGrow} />
@@ -52,10 +52,14 @@ const Topbar = props => {
             </Badge>
           </IconButton>
           <IconButton
-            onClick={async () => {
-              const logout = await api.logout()
-              logout && document.location.reload()
-              console.log(logout)
+            onClick={() => {
+              api.logout()
+                .then(()=>{
+                  setUser(null)
+                })
+                .catch(()=>{
+                  
+                })
             }}
             className={classes.signOutButton}
             color="inherit"

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
+
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -13,23 +15,9 @@ import {
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
 import AppContext from "../../contexts/app-context"
 
-const schema = {
-  username: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 64
-    }
-  },
-  password: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 128
-    }
-  }
-};
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -127,9 +115,24 @@ const useStyles = makeStyles(theme => ({
 
 const SignIn = props => {
   const { history } = props;
-  const {api} = useContext(AppContext)
+  const {api, setUser} = useContext(AppContext)
+  const { t, i18n } = useTranslation();
   const classes = useStyles();
 
+  const schema = {
+    username: {
+      presence: { allowEmpty: false, message: t('is required') },
+      length: {
+        maximum: 64
+      }
+    },
+    password: {
+      presence: { allowEmpty: false, message: t('is required') },
+      length: {
+        maximum: 128
+      }
+    }
+  };
   const [formState, setFormState] = useState({
     isValid: false,
     values: {},
@@ -173,7 +176,8 @@ const SignIn = props => {
   const handleSignIn = event => {
     event.preventDefault();
     api.authenticate({ ...formState.values, strategy: "local" })
-      .then(()=>{
+      .then((auth)=>{
+        setUser(auth.user)
         history.push("/")
       })
       .catch(()=>{
@@ -242,48 +246,16 @@ const SignIn = props => {
                   className={classes.title}
                   variant="h2"
                 >
-                  Sign in
+                  {t("Sign in")}
                 </Typography>
-                <Typography
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  Sign in with social media
-                </Typography>
-                <Grid
-                  className={classes.socialButtons}
-                  container
-                  spacing={2}
-                >
-                  <Grid item>
-                    <Button
-                      color="primary"
-                      onClick={handleSignIn}
-                      size="large"
-                      variant="contained"
-                    >
-                      <FacebookIcon className={classes.socialIcon} />
-                      Login with Facebook
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={handleSignIn}
-                      size="large"
-                      variant="contained"
-                    >
-                      <GoogleIcon className={classes.socialIcon} />
-                      Login with Google
-                    </Button>
-                  </Grid>
-                </Grid>
+
                 <Typography
                   align="center"
                   className={classes.sugestion}
                   color="textSecondary"
                   variant="body1"
                 >
-                  or login with username address
+                  {t("Login with username address")}
                 </Typography>
                 <TextField
                   className={classes.textField}
@@ -292,7 +264,7 @@ const SignIn = props => {
                   helperText={
                     hasError('username') ? formState.errors.username[0] : null
                   }
-                  label="Username"
+                  label={t("Username")}
                   name="username"
                   onChange={handleChange}
                   type="text"
@@ -306,7 +278,7 @@ const SignIn = props => {
                   helperText={
                     hasError('password') ? formState.errors.password[0] : null
                   }
-                  label="Password"
+                  label={t("Password")}
                   name="password"
                   onChange={handleChange}
                   type="password"
@@ -322,7 +294,7 @@ const SignIn = props => {
                   type="submit"
                   variant="contained"
                 >
-                  Sign in now
+                  {t("Sign in now")}
                 </Button>
                 <Typography
                   color="textSecondary"
@@ -334,7 +306,7 @@ const SignIn = props => {
                     to="/sign-up"
                     variant="h6"
                   >
-                    Sign up
+                    {t("Sign up")}
                   </Link>
                 </Typography>
               </form>

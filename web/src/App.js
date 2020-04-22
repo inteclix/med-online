@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Router } from 'react-router-dom';
+
 import { createBrowserHistory } from 'history';
 import { Chart } from 'react-chartjs-2';
 import { ThemeProvider } from '@material-ui/styles';
+import { LinearProgress } from "@material-ui/core";
 import validate from 'validate.js';
 
 import feathers from "@feathersjs/feathers"
 import auth from "@feathersjs/authentication-client"
 import rest from "@feathersjs/rest-client"
+
+import './i18n';
+
 import { chartjs } from './helpers';
 
 import theme from './theme';
@@ -40,11 +45,34 @@ validate.validators = {
   ...validators
 };
 
-
 const App = () => {
+  const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState(null)
 
+  useEffect(() => {
+    let mounted = true;
+    api.reAuthenticate()
+      .then((auth) => {
+        if (mounted && auth.user) {
+          setUser(auth.user)
+          setIsLoading(false)
+        }
+      })
+      .catch(() => {
+        setIsLoading(false)
+      })
+    return () => mounted = false;
+  })
+
+  if (isLoading) {
+    return (
+      <div>
+        <LinearProgress />
+      </div>
+    )
+  }
   return (
-    <AppContext.Provider value={{api: api}}>
+    <AppContext.Provider value={{ api, setUser, user }}>
       <ThemeProvider theme={theme}>
         <Router history={browserHistory}>
           <Routes />

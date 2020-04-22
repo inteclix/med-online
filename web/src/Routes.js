@@ -1,9 +1,10 @@
-import React from 'react';
-import { Switch, Redirect } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Switch, Redirect, useHistory } from 'react-router-dom';
 
-import  RouteWithLayout  from './components/RouteWithLayout/RouteWithLayout';
-import  PrivateRouteWithLayout  from './components/RouteWithLayout/PrivateRouteWithLayout';
+import RouteWithLayout from './components/RouteWithLayout/RouteWithLayout';
+import PrivateRouteWithLayout from './components/RouteWithLayout/PrivateRouteWithLayout';
 import { Main as MainLayout, Minimal as MinimalLayout } from './layouts';
+import AppConext from "./contexts/app-context"
 
 import {
   Dashboard as DashboardView,
@@ -19,6 +20,27 @@ import {
 } from './views';
 
 const Routes = () => {
+  const history = useHistory()
+  const { user } = useContext(AppConext)
+  if (!user) {
+    return (
+      <Switch>
+        <RouteWithLayout
+          component={SignInView}
+          exact
+          layout={MinimalLayout}
+          path="/sign-in"
+        />
+        <RouteWithLayout
+          component={SignUpView}
+          exact
+          layout={MinimalLayout}
+          path="/sign-up"
+        />
+        {history.location.pathname !== "/sign-up" && <Redirect to="sign-in" />}
+      </Switch>
+    )
+  }
   return (
     <Switch>
       <Redirect
