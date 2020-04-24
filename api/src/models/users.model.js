@@ -46,6 +46,10 @@ module.exports = function (app) {
     isActive: {
       type: DataTypes.BOOLEAN,
       defaultValue: 1
+    },
+    is: {
+      type: DataTypes.STRING,
+      defaultValue: "patient"
     }
   }, {
     hooks: {
@@ -58,6 +62,8 @@ module.exports = function (app) {
   // eslint-disable-next-line no-unused-vars
   users.associate = function (models) {
     users.hasOne(models.doctors)
+    users.hasOne(models.patients)
+    users.hasOne(models.secretaries)
   };
 
   return users;

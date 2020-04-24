@@ -25,33 +25,36 @@ module.exports = function (app) {
     });
 
     // Sync to the database
-    app.set('sequelizeSync', sequelize.sync({ force: true }).then(() => {
-      // uncomment to sedding data in the database
-      seedDB(app)
-    }))
+    // uncomment to sedding data in the database and sync
+    app.set('sequelizeSync', sequelize.sync({ force: true }).then(() => { seedDB(app) }))
 
 
     return result;
   };
 };
 
-const seedDB = (app) => {
-  app.service("users").create({
-    username: "admin",
-    firstname: "seddik",
-    lastname: "benzemame",
-    password: "0123456789",
-    permissions: "admin"
-  })
-  app.service("medicaments").create({
-    CODE: "Doliprane",
-  })
-  app.service("specialities").create({
+const seedDB = async (app) => {
+  await app.service("specialities").create({
+    id: 1,
     name: "generale",
     description: "medcin generale"
   })
-    app.service("specialities").create({
+  await app.service("specialities").create({
     name: "dentiste",
     description: "medcin dentaire"
   })
+  await app.service("users").create({
+    id: 1,
+    username: "doctor",
+    firstname: "seddik",
+    lastname: "benzemame",
+    password: "0123456789",
+    is: "doctor",
+    specialityId: 1
+  })
+
+  await app.service("medicaments").create({
+    CODE: "Doliprane",
+  })
+
 }

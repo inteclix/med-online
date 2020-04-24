@@ -34,7 +34,7 @@ const Profile = (props) => {
       className={clsx(classes.root, className)}
     >
       <Avatar
-        alt="seddik"
+        alt={user.username.toUpperCase()}
         className={classes.avatar}
         component={RouterLink}
         src={"/image/"}
@@ -44,7 +44,7 @@ const Profile = (props) => {
         className={classes.name}
         variant="h4"
       >
-        {user.firstname + " " + user.firstname}
+        {user.username}
       </Typography>
       <Typography variant="body2">{"bio"}</Typography>
     </div>

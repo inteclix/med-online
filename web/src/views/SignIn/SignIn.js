@@ -255,7 +255,7 @@ const SignIn = props => {
                   color="textSecondary"
                   variant="body1"
                 >
-                  {t("Login with username address")}
+                  {t("Login with username")}
                 </Typography>
                 <TextField
                   className={classes.textField}
